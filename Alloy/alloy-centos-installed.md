@@ -57,7 +57,7 @@ CUSTOM_ARGS="--server.http.listen-addr=127.0.0.1:12345 --storage.path=/var/lib/a
 GRAFANA_CLOUD_USERNAME="your-org-or-username"
 GRAFANA_CLOUD_API_KEY="REPLACE_WITH_SECRET"
 ```
-## primission 
+## Set Permissions
 ```
 sudo chown root:root /etc/sysconfig/alloy
 sudo chmod 640 /etc/sysconfig/alloy
@@ -84,21 +84,21 @@ LimitNOFILE=65536
 [Install]
 WantedBy=multi-user.target
 ```
-## systemd and enable/start:
+## Enable and Start the Service
 ```
 sudo systemctl daemon-reload
 sudo systemctl enable --now alloy
 ```
-## Validate and check the config + logs
+## Validate and Check the Configuration
 ```
 sudo /usr/local/bin/alloy validate /etc/alloy/config.alloy
 ```
-## Check service status and logs:
+## Check Service Status and Logs
 ```
 sudo systemctl status alloy --no-pager
 sudo journalctl -u alloy -f
 ```
-## Alloy UI (debugging UI) & firewall
+## Alloy UI (Debugging UI) & Firewall
 ```
 sudo firewall-cmd --permanent --add-port=12345/tcp
 sudo firewall-cmd --reload
@@ -109,4 +109,5 @@ sudo setenforce 0    # debug only
 # restart alloy, check logs; then re-enable:
 sudo setenforce 1
 ```
+## Production Solution
 Production solution: create a small SELinux policy module (use audit2allow) or use semanage to add port labeling if needed. (Installing policycoreutils-python earlier gives you semanage.)
