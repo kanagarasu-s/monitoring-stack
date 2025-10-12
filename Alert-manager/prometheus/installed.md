@@ -1,23 +1,32 @@
 ## Setup of Prometheus Alertmanager in CentOS 
+
 ## Update the server
+
 ```
 dnf update -y
 yum update
 ```
+
 ## Download Alertmanager
+
 ```
 cd /opt
 wget https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-amd64.tar.gz
 ```
+
 ## install and extract Alertmanager
+
 ```
 tar -xvf alertmanager-0.25.0.linux-amd64.tar.gz
 mv alertmanager-0.25.0.linux-amd64 /usr/local/bin/alertmanager
 ```
+
 ## Create the Alertmanager service file
+
 ```
 vi /etc/systemd/system/alertmanager.service
 ```
+
 ```
 [Unit]
 Description=Prometheus Alertmanager Service
@@ -29,33 +38,49 @@ ExecStart=/usr/local/bin/alertmanager/alertmanager \
     --config.file=/usr/local/bin/alertmanager/alertmanager.yml \
     --cluster.advertise-address="xx.xx.xx.xx:9093"
 Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
 ```
+
 ## Verify Alertmanager configuration
+
 ```
 /usr/local/bin/alertmanager/amtool check-config /usr/local/bin/alertmanager/alertmanager.yml
 ```
+
 ## Reload daemon, enable, start, and check status
+
 ```
 systemctl daemon-reload
 systemctl enable --now alertmanager.service
 systemctl status alertmanager.service
 ```
+
 ## Allow port 9093 in the firewall
+
 ```
 firewall-cmd --permanent --add-port=9093/tcp
 firewall-cmd --reload
 ```
+
 ## Access in browser
+
 ```
 http://<server_ip>:9093
 ```
+
 ## Create Alert Rules for Prometheus
+
 ```
 mkdir -p /etc/prometheus/rules
 ```
+
 ```
 vi /etc/prometheus/rules/alert_rules.yml
 ```
+
 ```
 groups:
 - name: alert-rules
@@ -176,10 +201,13 @@ groups:
         Windows server {{ $labels.instance }} is unreachable or exporter stopped responding
         for more than 2 minutes.
 ```
+
 ## Update Prometheus Configuration
+
 ```
 vi /etc/prometheus/prometheus.yml
 ```
+
 ```
 global:
   scrape_interval: 15s
@@ -193,16 +221,21 @@ alerting:
         - targets:
             - "localhost:9093"
 ```
+
 ## Reload Prometheus
+
 ```
 systemctl daemon-reload
 systemctl restart prometheus
 systemctl status prometheus
 ```
+
 ## Configure Alertmanager for Notification
+
 ```
 vi /usr/local/bin/alertmanager/alertmanager.yml
 ```
+
 ```
 global:
   smtp_smarthost: 'smtp.gmail.com:587'
@@ -219,7 +252,9 @@ receivers:
     email_configs:
       - to: 'admin@example.com'
 ```
+
 ## Microsoft Teams Notification
+
 ```
 route:
   receiver: 'teams-notify'
@@ -229,11 +264,12 @@ receivers:
     webhook_configs:
       - url: 'https://outlook.office.com/webhook/XXXXXXXXXXXXXX'
 ```
+
 ## Reload Alertmanager
+
 ```
 systemctl restart alertmanager
 systemctl status alertmanager
 ```
 
-[Install]
-WantedBy=multi-user.target
+
