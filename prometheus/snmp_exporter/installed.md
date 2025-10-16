@@ -17,7 +17,7 @@ snmpwalk comes from the package net-snmp-utils, and it’s asking if you want to
 ```
 sudo dnf install net-snmp-utils
 ```
-## Test SNMP access:
+## Test PFSense SNMP access to snmp_exporter:
 
 ```
 snmpwalk -v2c -c public 192.168.130.254 1.3.6.1.2.1.1.1.0
