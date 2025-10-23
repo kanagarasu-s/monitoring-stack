@@ -43,5 +43,5 @@ loki.write "apache" {
   endpoint {
     url = "http://54.81.159.127:3100/loki/api/v1/push"
   }
-```
 }
+```
