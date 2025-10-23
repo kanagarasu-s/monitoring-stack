@@ -1,3 +1,4 @@
+```
 local.file_match "apache" {
   path_targets = [
     { __path__ = "/var/log/apache2/access.log" },
